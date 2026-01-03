@@ -1,0 +1,509 @@
+<!-- 
+*****************************************************************
+*  search.html                                                  *
+*****************************************************************
+*                                                               *
+*                      This file is part of:                    *
+*                        MOONVEIL PROJECT                       *
+*                                                               *
+*****************************************************************
+-->
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Moonveil - {{ target_name }}</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400"
+        >
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/global.css') }}"
+        >
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/search.css') }}"
+        >
+    </head>
+    <body>
+
+        <header class="site-header">
+            Moonveil
+            <span class="current-target">{{ target_name }}</span>
+        </header>
+        
+        <aside class="site-sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a class="active" href="/target">Target</a></li>
+                    <li><a class="active" href="/asm/{{ target_name }}">ASM</a></li>
+                    <li><a class="active" href="/search/{{ target_name }}">Search</a></li>
+                    <li><a class="inactive" href="/content">Content</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="site-content">
+            <h3 class="search-heading">
+                Search the Attack Surface
+                <span class="info">({{ available_asm }}% available)</span>
+            </h3>
+    
+            <form
+                class="search-form"
+                action="/search/assets"
+                method="get"
+                onsubmit="return validateSearchForm()"
+            >
+                <input
+                    class="hidden"
+                    name="target_name"
+                    type="text"
+                    value="{{ target_name }}"
+                >
+
+                <div class="search-container">
+                    <input
+                        id="search-input"
+                        name="query_string"
+                        type="text" 
+                        placeholder="Search..."
+                        required
+                    >
+
+                    <div class="dropdown">
+                        <select name="search_type" id="search-type-select">
+                            <option value="subdomains">Subdomains</option>
+                            <option value="archives">Archives</option>
+                        </select>
+                    </div>
+                    <button class="search-primary" type="submit">
+                        Search
+                    </button>
+                </div>
+                <span id="query-error" class="error-message"></span>
+            </form>
+
+            <section class="results-section">
+
+                {% if search_performed %}
+                    {% if results %}
+                        <h3 class="search-heading">
+                            Results for '<span class="query-text">{{ query_string }}</span>' - {{ results_count }}
+                        </h3>
+                        {% for result in results %}
+                            {% if search_type == 'subdomains' %}
+                                <div class="card">
+                                    {% if result.status == 'Online' %}
+                                        <div class="online-button">
+                                            <span>Online</span>
+                                        </div>
+                                    {% else %}
+                                        <div class="offline-button">
+                                            <span>Offline</span>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if result.screenshot %}
+                                        <img
+                                            class="card-image"
+                                            src="{{ url_for('static', filename=screenshot_directory + result.screenshot) }}"
+                                        >
+                                    {% else %}
+                                        <div class="fallback-div">
+                                            No Image
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="card-content">
+                                        {% if result.redirect %}
+                                            <h4 class="card-heading">
+                                                <a href="{{ result.redirect }}" target="_blank">
+                                                    {{ result.name }}
+                                                </a>
+                                            </h4>
+                                        {% else %}
+                                            <h4 class="card-heading">
+                                                {{ result.name }}
+                                            </h4>
+                                        {% endif %}
+                                        <p>Host: {{ result.host }}</p>
+                                        <p>Status Code: {{ result.status_code }}</p>
+                                        <p>Server: {{ result.server }}</p>
+                                        <p>Method: {{ result.method }}</p>
+                                        <p>Content-Type: {{ result.content_type }}</p>
+                                        <p>Content-Length: {{ result.content_length }}</p>
+                                        <p>Timestamp: {{ result.timestamp }}</p>
+                                    </div>
+
+                                    <button
+                                        class="response-button"
+                                        data-response-content="{{ result.response }}"
+                                    >
+                                        Response
+                                    </button>
+                                </div>
+                            {% else %}
+                                <div class="archive-card">
+                                    <span class="archive-indicator">Archive</span>
+                                    <span class="archive-url">
+                                        {{ result.name }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="pagination">
+                            {% if page > 1 %}
+                                <a
+                                    class="page-link prev"
+                                    href="{{ url_for('search.search_assets', target_name=target_name, query_string=query_string, search_type=search_type, page=page-1) }}"
+                                >
+                                    &laquo; Prev
+                                </a>
+                            {% endif %}
+
+                            {% for page_number in page_numbers %}
+                                <a
+                                    class="page-link {% if page_number == page %}active{% endif %}"
+                                    href="{{ url_for('search.search_assets', target_name=target_name, query_string=query_string, search_type=search_type, page=page_number) }}"
+                                >
+                                    {{ page_number }}
+                                </a>
+                            {% endfor %}
+
+                            {% if page < num_pages %}
+                                <a
+                                    class="page-link next"
+                                    href="{{ url_for('search.search_assets', target_name=target_name, query_string=query_string, search_type=search_type, page=page+1) }}"
+                                >
+                                    Next &raquo;
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p class="no-results-text">
+                            No results found.
+                        </p>
+                    {% endif %}
+                {% endif %}
+            </section>
+        </main>
+
+        <script
+            src="{{ url_for('static', filename='js/global.js') }}"
+        ></script>
+        <script
+            src="{{ url_for('static', filename='js/search.js') }}"
+        ></script>
+    </body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Head -->
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>Moonveil - {{ target_name }}</title>
+        <link href="{{ url_for('static', filename='css/global.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/search.css') }}" rel="stylesheet">
+    </head>
+
+    <!-- Body -->
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <!-- Brand / Start -->
+            <div class="navbar-brand">
+                <strong class="navbar-item">
+                    <img
+                        class="navbar-logo"
+                        alt="Moonveil Logo"
+                        src="{{ url_for('static', filename='assets/logo.png') }}"
+                    />
+                    Moonveil
+                    <span class="current-target">{{ target_name }}</span>
+                </strong>
+
+                <a
+                    class="navbar-burger custom-navbar-burger"
+                    data-target="navbar-menu-data"
+                    aria-label="menu"
+                    aria-expanded="false"
+                    role="button"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <!-- End -->
+            <div class="navbar-end">
+                <div class="navbar-menu custom-navbar-menu" id="navbar-menu-data">
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/target"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/target.png') }}"
+                            alt="Target Icon"
+                        >
+                        <span class="navbar-link-text">Targets</span>
+                    </a>
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/asm/{{ target_name }}"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/asm.png') }}"
+                            alt="ASM Icon"
+                        >
+                        <span class="navbar-link-text">Attack Surface</span>
+                    </a>
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/search/{{ target_name }}"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/search.png') }}"
+                            alt="Search Icon"
+                        >
+                        <span class="navbar-link-text">Search</span>
+                    </a>
+                    <a
+                        class="navbar-item navbar-inactive-link"
+                        aria-disabled="true"
+                        href="#"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/content.png') }}"
+                            alt="Content Icon"
+                        >
+                        <span class="navbar-link-text">Content Discovery</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Sidebar + Content -->
+        <div class="columns is-gapless">
+
+            <!-- Sidebar -->
+            <div class="column is-2 is-mobile is-narrow sidebar">
+                <aside class="menu">
+                    <ul class="menu-list">
+                        <li>
+                            <a
+                                class="tab-button active"
+                                data-target="subdomains"
+                            >
+                                Subdomains
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="tab-button"
+                                data-target="archives"
+                            >
+                                Archives
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+
+            <!-- Content -->
+            <div class="column is-10 is-mobile content">
+
+                <!-- Subdomains (Tab) -->
+                <div id="subdomains" class="tab-content">
+                    
+                    <div class="container p-5">
+                        
+                        <h3 class="title tab-title">
+                            Search the Attack Surface
+                            <span class="info">({{ available_asm }}% available)</span>
+                        </h3>
+                
+                        <form
+                            class="search-form"
+                            action="/search/assets"
+                            method="get"
+                            onsubmit="return validateSearchForm()"
+                        >
+                            <input
+                                class="hidden"
+                                name="target_name"
+                                type="text"
+                                value="{{ target_name }}"
+                            >
+            
+                            <div class="search-container">
+                                <input
+                                    id="search-input"
+                                    name="query_string"
+                                    type="text" 
+                                    placeholder="Search..."
+                                    required
+                                >
+            
+                                <div class="dropdown">
+                                    <select name="search_type" id="search-type-select">
+                                        <option value="subdomains">Subdomains</option>
+                                        <option value="archives">Archives</option>
+                                    </select>
+                                </div>
+                                <button class="search-primary" type="submit">
+                                    Search
+                                </button>
+                            </div>
+                            <span id="query-error" class="error-message"></span>
+                        </form>
+            
+                        <section class="results-section">
+            
+                            {% if search_performed %}
+                                {% if results %}
+                                    <h3 class="title tab-title">
+                                        Results for '<span class="query-text">{{ query_string }}</span>' - {{ results_count }}
+                                    </h3>
+                                    {% for result in results %}
+                                        {% if search_type == 'subdomains' %}
+                                            <div class="card">
+                                                {% if result.status == 'Online' %}
+                                                    <div class="online-button">
+                                                        <span>Online</span>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="offline-button">
+                                                        <span>Offline</span>
+                                                    </div>
+                                                {% endif %}
+            
+                                                {% if result.screenshot %}
+                                                    <img
+                                                        class="card-image"
+                                                        src="{{ url_for('static', filename=screenshot_directory + result.screenshot) }}"
+                                                    >
+                                                {% else %}
+                                                    <div class="fallback-div">
+                                                        No Image
+                                                    </div>
+                                                {% endif %}
+            
+                                                <div class="card-content">
+                                                    {% if result.redirect %}
+                                                        <h4 class="card-heading">
+                                                            <a href="{{ result.redirect }}" target="_blank">
+                                                                {{ result.name }}
+                                                            </a>
+                                                        </h4>
+                                                    {% else %}
+                                                        <h4 class="card-heading">
+                                                            {{ result.name }}
+                                                        </h4>
+                                                    {% endif %}
+                                                    <p>Host: {{ result.host }}</p>
+                                                    <p>Status Code: {{ result.status_code }}</p>
+                                                    <p>Server: {{ result.server }}</p>
+                                                    <p>Method: {{ result.method }}</p>
+                                                    <p>Content-Type: {{ result.content_type }}</p>
+                                                    <p>Content-Length: {{ result.content_length }}</p>
+                                                    <p>Timestamp: {{ result.timestamp }}</p>
+                                                </div>
+            
+                                                <button
+                                                    class="response-button"
+                                                    data-response-content="{{ result.response }}"
+                                                >
+                                                    Response
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            <div class="archive-card">
+                                                <span class="archive-indicator">Archive</span>
+                                                <span class="archive-url">
+                                                    {{ result.name }}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+            
+                                    <div class="pagination">
+                                        {% if page > 1 %}
+                                            <a
+                                                class="page-link prev"
+                                                href="{{ url_for('search.search_assets', target_name=target_name, query_string=query_string, search_type=search_type, page=page-1) }}"
+                                            >
+                                                &laquo; Prev
+                                            </a>
+                                        {% endif %}
+            
+                                        {% for page_number in page_numbers %}
+                                            <a
+                                                class="page-link {% if page_number == page %}active{% endif %}"
+                                                href="{{ url_for('search.search_assets', target_name=target_name, query_string=query_string, search_type=search_type, page=page_number) }}"
+                                            >
+                                                {{ page_number }}
+                                            </a>
+                                        {% endfor %}
+            
+                                        {% if page < num_pages %}
+                                            <a
+                                                class="page-link next"
+                                                href="{{ url_for('search.search_assets', target_name=target_name, query_string=query_string, search_type=search_type, page=page+1) }}"
+                                            >
+                                                Next &raquo;
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <p class="no-results-text">
+                                        No results found.
+                                    </p>
+                                {% endif %}
+                            {% endif %}
+                        </section>
+
+                    </div>
+
+                </div>
+
+                <!-- Archives (Tab) -->
+                <div id="archives" class="tab-content is-hidden">
+
+                    <div class="container p-5">
+
+                        <h3 class="title tab-title">
+                            Search for Archived Subdomains
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        </div>
+
+        <script
+            src="{{ url_for('static', filename='js/global.js') }}"
+        ></script>
+        <script
+            src="{{ url_for('static', filename='js/search.js') }}"
+        ></script>
+    </body>
+
+</html>

@@ -1,0 +1,167 @@
+/* 
+*****************************************************************
+*  target.css                                                   *
+*****************************************************************
+*                                                               *
+*                      This file is part of:                    *
+*                        MOONVEIL PROJECT                       *
+*                                                               *
+*****************************************************************
+*/
+
+/*
+.empty-targets-list {
+    font-weight: normal;
+    color: var(--text);
+    opacity: 25%;
+}
+
+.target-list {
+    padding: 0;
+    list-style: none;
+}
+
+.target-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.target-list-item a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.target-list-item a:hover {
+    color: var(--primary);
+}
+
+.delete-form {
+    margin-left: 32px;
+}
+
+.button-danger {
+    width: 6rem;
+    height: 1.6rem;
+    color: var(--text);
+    background-color: var(--danger);
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+}
+*/
+
+.empty-targets-list {
+    font-weight: normal;
+    color: var(--text);
+    opacity: 25%;
+}
+
+/* Card */
+
+.card-custom {
+    width: 72vw;
+    color: var(--text) !important;
+
+    border-color: var(--card) !important;
+    border-radius: 0.5rem !important;
+    border-style: solid !important;
+    border-width: 1px !important;
+    
+    /* card shadow */
+    /* box-shadow: 0 .25em .5em 0 hsla(252, 44%, 72%, 0.1) !important; */
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+
+    gap: .5em !important;
+    padding: 1.5em 1.5em 1.5em !important;
+    transition-duration: 294ms !important;
+    transition-property: border-color,box-shadow,transform !important;
+    background-color: var(--card) !important;
+    
+}
+
+.card-title {
+    color: var(--primary) !important;
+    font-size: 1.25rem !important;
+}
+
+.card-title:hover {
+    opacity: 0.5;
+}
+
+.delete-button {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    box-shadow: none;
+}
+
+.text-secondary {
+    color: var(--text) !important;
+    opacity: 0.5 !important;
+    margin-left: 0.1275rem;
+}
+
+.card-custom:hover {
+    border-color: var(--primary) !important;
+    /* box-shadow: 0 0.25rem 0.5rem 0 hsla(252, 44%, 72%, 0.2) !important; */
+    transform: translateY(-0.25rem) !important;
+}
+
+/* Form */
+
+.label:not(:last-child) {
+    color: var(--text);
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.custom-input {
+    width: 32vw;
+    color: var(--text);
+    border: var(--border);
+    border-radius: 0.5rem;
+    background-color: var(--background);
+    margin-bottom: 1rem;
+}
+
+.input::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+    font-weight: 300;
+}
+
+.input:focus {
+    border-color: var(--primary);
+}
+
+.textarea.custom-textarea {
+    margin-bottom: 1.5rem;
+    min-width: 32vw;
+    max-width: 32vw;
+    min-height: 8vh;
+    max-height: 32vh;
+    color: var(--text);
+    border: var(--border);
+    border-radius: 0.5rem;
+    background-color: var(--background);
+}
+
+.custom-textarea::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
+
+.custom-textarea:focus {
+    border-color: var(--primary);
+}
+
+.button.button.new-button {
+    border: none;
+    width: 16vw;
+    border-radius: 0.5rem;
+    color: var(--text);
+    background-color: var(--primary);
+}

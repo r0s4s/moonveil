@@ -1,0 +1,341 @@
+/* 
+*****************************************************************
+*  search.css                                                   *
+*****************************************************************
+*                                                               *
+*                      This file is part of:                    *
+*                        MOONVEIL PROJECT                       *
+*                                                               *
+*****************************************************************
+*/
+
+.search-heading {
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
+.query-text {
+    color: var(--primary);
+}
+
+.info {
+    opacity: 25%;
+}
+
+.search-container {
+    margin-top: 20px;
+    display: flex;
+}
+
+#search-input {
+    flex-grow: 1;
+    padding: 12px;
+    margin-right: 8px;
+    color: var(--text);
+    background-color: var(--background);
+    border: var(--border);
+    border-radius: 8px;
+    width: calc(100% - 160px);
+}
+
+#search-input::placeholder {
+    color: var(--text);
+    opacity: 25%;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    height: 2.6rem;
+}
+
+.dropdown select {
+    border: var(--border);
+    border-radius: 8px;
+    background-color: var(--background);
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    height: 2.6rem;
+    appearance: none;
+}
+
+.dropdown select:focus {
+    outline: none;
+}
+
+.dropdown select::-ms-expand {
+    display: none;
+}
+
+.dropdown::after {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text);
+}
+
+.dropdown select option {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+.dropdown select:focus {
+    border-color: var(--primary);
+}
+
+.search-primary {
+    width: 8rem;
+    height: 2.6rem;
+    color: var(--text);
+    background-color: var(--primary);
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    margin-left: 8px;
+}
+
+.error-border {
+    border-color: var(--danger) !important;
+}
+
+.error-message {
+    color: var(--danger);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.84rem;
+}
+
+.card {
+    height: 400px;
+    background-color: var(--card);
+    /* border-radius: 8px; */
+    padding: 16px;
+    margin-bottom: 16px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    position: relative;
+    display: flex;
+}
+
+.card-image {
+    width: 360px;
+    height: 360px;
+    border-radius: 8px;
+    object-fit: cover;
+    /* margin-right: 16px; */
+    transition: transform 0.3s ease;
+}
+
+.card-image:hover {
+    transform: scale(1.1);
+}
+
+.card-image.zoomed {
+    transform: scale(2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    margin: auto;
+    cursor: zoom-out;
+}
+
+.fallback-div {
+    width: 360px;
+    height: 360px;
+    background-color: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.25;
+    border-radius: 8px;
+    margin-right: 16px;
+}
+
+.online-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 0.9rem;
+    background-color: var(--success);
+    color: var(--text);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.offline-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 0.9rem;
+    background-color: var(--danger);
+    color: var(--text);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+}
+
+.card-heading {
+    margin: 0;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.card-heading a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.card-heading a:hover {
+    text-decoration: underline;
+}
+
+.card p {
+    margin: 8px 0;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.tab-title {
+    padding-top: 1rem !important;
+}
+
+.no-results-text {
+    text-align: center;
+    color: var(--text);
+    opacity: 0.25;
+    margin: 20px 0;
+}
+
+.response-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 0.9rem;
+    background-color: var(--info);
+    color: var(--text);
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.response-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--popup);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: var(--popup);
+    color: var(--text);
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    height: 60%;
+    overflow-y: auto;
+    max-width: 80%;
+}
+
+.popup-content pre {
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+    color: var(--text);
+    background-color: var(--popup);
+}
+
+.close-button {
+    background-color: var(--danger);
+    color: var(--text);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.archive-card {
+    background-color: var(--card);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    overflow-wrap: break-word;
+    position: relative;
+}
+
+.archive-url {
+    color: var(--text);
+    margin-bottom: 8px;
+    display: block;
+    max-width: 92%;
+    word-wrap: break-word;
+}
+
+.archive-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: var(--card);
+    border: var(--border);
+    color: var(--text);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.page-link {
+    display: inline-block;
+    padding: 0.6rem;
+    margin: 0 4px;
+    text-decoration: none;
+    color: var(--text);
+    border: var(--border);
+    border-radius: 4px;
+}
+
+.page-link.active {
+    background-color: var(--primary);
+    color: var(--text);
+    border-color: var(--primary);
+}
+
+.page-link.prev {
+    margin-right: auto;
+}
+
+.page-link.next {
+    margin-left: auto;
+}
+
+.page-link:not(.prev):not(.next) {
+    width: 2rem;
+    /* height: 1.6rem; */
+    /* text-align: center; */
+}

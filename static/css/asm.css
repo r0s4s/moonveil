@@ -1,0 +1,112 @@
+/* 
+*****************************************************************
+*  asm.css                                                      *
+*****************************************************************
+*                                                               *
+*                      This file is part of:                    *
+*                        MOONVEIL PROJECT                       *
+*                                                               *
+*****************************************************************
+*/
+
+.asm-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.asm-fields label {
+    margin-right: 12px;
+}
+
+.asm-fields label:nth-of-type(2) {
+    margin-left: 12px;
+}
+
+.number-input {
+    padding: 0.5rem 1rem;
+    color: var(--text);
+    background: var(--background);
+    border: var(--border);
+    border-radius: 0.5rem;
+}
+
+.asm-button {
+    padding: 0.4rem 0.8rem;
+    color: var(--text);
+    background-color: var(--primary);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.results-container {
+    margin-top: 2rem;
+    padding-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.result-square {
+    width: 30rem;
+    height: 15rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    background-color: var(--card);
+    /* border: var(--border); */
+    border-radius: 0.5rem;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.count {
+    margin-bottom: 0.6rem;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.count-label {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    opacity: 25%;
+}
+
+.timestamp {
+    font-size: 1rem;
+    opacity: 25%;
+    color: var(--text);
+}
+
+/*
+.asm-list {
+    list-style: none !important;
+}
+*/
+
+.content ul {
+    list-style: disc outside !important;
+    margin-inline-start: 0 !important;
+    margin-top: 1em !important;
+}
+
+.asm-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: var(--border);
+}
+
+.load-more-button {
+    background-color: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin: 10px auto;
+}

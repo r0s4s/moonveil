@@ -1,0 +1,20 @@
+####################################################################
+#  endpoint.py                                                     #
+####################################################################
+#                                                                  #
+#                      This file is part of:                       #
+#                        MOONVEIL PROJECT                          #
+#                                                                  #
+####################################################################
+
+# Instance
+from core.instance import database_instance as db
+
+class Archive(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, index=True)
+    target_id = db.Column(
+        db.Integer,
+        db.ForeignKey('target.id', ondelete='CASCADE')
+    )
+    

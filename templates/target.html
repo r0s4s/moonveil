@@ -1,0 +1,480 @@
+<!-- 
+*****************************************************************
+*  target.html                                                  *
+*****************************************************************
+*                                                               *
+*                      This file is part of:                    *
+*                        MOONVEIL PROJECT                       *
+*                                                               *
+*****************************************************************
+-->
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Moonveil</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400"
+        >
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/global.css') }}"
+        >
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/target.css') }}"
+        >
+    </head>
+    <body>
+
+        <header class="site-header">Moonveil</header>
+        
+        <aside class="site-sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a class="active" href="/target">Target</a></li>
+                    <li><a class="inactive" href="/asm">ASM</a></li>
+                    <li><a class="inactive" href="/search">Search</a></li>
+                    <li><a class="inactive" href="/content">Content</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="site-content">
+
+            <div class="tab-nav">
+                <button
+                    class="tab-button active"
+                    data-target="targets-list"
+                >
+                    Targets
+                </button>
+                <button
+                    class="tab-button"
+                    data-target="new-target"
+                >
+                    New
+                </button>
+            </div>
+            
+            <div class="tab-content active" id="targets-list">
+                <h3 class="tab-heading">
+                    List of available target projects
+                </h3>
+                {% if targets %}
+                    <ul class="target-list">
+                        {% for target in targets %}
+                            <li class="target-list-item">
+                                <a
+                                    class="target-link"
+                                    href="/asm/{{ target.name }}"
+                                >
+                                    {{ target.name }}
+                                </a>
+
+                                <form
+                                    class="delete-form"
+                                    action="/target/delete/{{ target.id }}"
+                                    method="post"
+                                >
+                                    <button
+                                        class="button-danger"
+                                        type="submit"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <span class="empty-targets-list">
+                        No target projects available
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="tab-content" id="new-target">
+                <h3 class="tab-heading">
+                    Create a new target project
+                </h3>
+                <form
+                    class="target-form"
+                    action="/target/new"
+                    method="post"
+                >
+                    <label class="form-label" for="name">
+                        Target Name
+                    </label><br>
+                    <input
+                        class="form-input"
+                        id="name"
+                        name="name"
+                        type="text"
+                        placeholder="Yahoo"
+                        required
+                    ><br>
+
+                    <label class="form-label" for="name">
+                        Scope
+                    </label><br>
+                    <input
+                        class="form-input"
+                        id="scope"
+                        name="scope"
+                        type="text"
+                        placeholder="Open"
+                    ><br>
+
+                    <label class="form-label" for="name">
+                        Program
+                    </label><br>
+                    <input
+                        class="form-input"
+                        id="program"
+                        name="program"
+                        type="text"
+                        placeholder="Hackerone"
+                    ><br>
+
+                    <label class="form-label" for="name">
+                        ASN(s)
+                    </label><br>
+                    <textarea
+                        class="form-textarea"
+                        id="asns"
+                        name="asns"
+                        placeholder="AS7233"
+                    ></textarea><br>
+
+                    <label class="form-label" for="name">
+                        Domain(s)
+                    </label><br>
+                    <textarea
+                        class="form-textarea"
+                        id="domains"
+                        name="domains"
+                        placeholder="yahoo.com"
+                        required
+                    ></textarea><br>
+
+                    <label class="form-label" for="name">
+                        IP Range(s)
+                    </label><br>
+                    <textarea
+                        class="form-textarea"
+                        id="ranges"
+                        name="ranges"
+                        placeholder="87.248.98.0/24"
+                    ></textarea><br>
+
+                    <button
+                        class="button-primary"
+                        type="submit"
+                    >
+                        New
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <script
+            src="{{ url_for('static', filename='js/global.js') }}"
+        ></script>
+        <script
+            src="{{ url_for('static', filename='js/target.js') }}"
+        ></script>
+    </body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Head -->
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>Moonveil</title>
+        <link href="{{ url_for('static', filename='css/global.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/target.css') }}" rel="stylesheet">
+    </head>
+
+    <!-- Body -->
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <!-- Brand / Start -->
+            <div class="navbar-brand">
+                <strong class="navbar-item">
+                    <img
+                        class="navbar-logo"
+                        alt="Moonveil Logo"
+                        src="{{ url_for('static', filename='assets/logo.png') }}"
+                    />
+                    Moonveil
+                </strong>
+
+                <a
+                    class="navbar-burger custom-navbar-burger"
+                    data-target="navbar-menu-data"
+                    aria-label="menu"
+                    aria-expanded="false"
+                    role="button"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <!-- End -->
+            <div class="navbar-end">
+                <div class="navbar-menu custom-navbar-menu" id="navbar-menu-data">
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/target"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/target.png') }}"
+                            alt="Target Icon"
+                        >
+                        <span class="navbar-link-text">Targets</span>
+                    </a>
+                    <a
+                        class="navbar-item navbar-inactive-link"
+                        aria-disabled="true"
+                        href="#"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/asm.png') }}"
+                            alt="ASM Icon"
+                        >
+                        <span class="navbar-link-text">Attack Surface</span>
+                    </a>
+                    <a
+                        class="navbar-item navbar-inactive-link"
+                        aria-disabled="true"
+                        href="#"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/search.png') }}"
+                            alt="Search Icon"
+                        >
+                        <span class="navbar-link-text">Search</span>
+                    </a>
+                    <a
+                        class="navbar-item navbar-inactive-link"
+                        aria-disabled="true"
+                        href="#"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/content.png') }}"
+                            alt="Content Icon"
+                        >
+                        <span class="navbar-link-text">Content Discovery</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Sidebar + Content -->
+        <div class="columns is-gapless">
+
+            <!-- Sidebar -->
+            <div class="column is-2 is-mobile is-narrow sidebar">
+                <aside class="menu">
+                    <ul class="menu-list">
+                        <li>
+                            <a
+                                class="tab-button active"
+                                data-target="targets-list"
+                            >
+                                Targets List
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="tab-button"
+                                data-target="new-target"
+                            >
+                                New Target
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+
+            <!-- Content -->
+            <div class="column is-10 is-mobile content">
+
+                <!-- Targets List (Tab) -->
+                <div id="targets-list" class="tab-content">
+                    <div class="container p-5">
+
+                        <h3 class="title tab-title">
+                            List of available Targets
+                        </h3>
+
+                        {% if targets %}
+                            <div class="columns is-multiline">
+                                {% for target in targets %}
+                                    <!-- Target Card  -->
+                                    <div class="column is-12-mobile">
+                                        <div class="box card-custom">
+
+                                            <!-- First Row: Title and Icon -->
+                                            <div class="columns is-vcentered">
+
+                                                <!-- Link -->
+                                                <div class="column is-11">
+                                                    <a
+                                                        class="title card-title"
+                                                        href="/asm/{{ target.name }}"
+                                                    >
+                                                        {{ target.name }}
+                                                    </a>
+                                                    <span class="text-secondary">
+                                                        ({{ target.program }})
+                                                    </span>
+                                                    
+                                                </div>
+
+                                                <!-- Delete Button -->
+                                                <div class="column is-1">
+                                                    <form class="delete-form" action="/target/delete/{{ target.id }}" method="post">
+                                                        <button class="button is-small delete-button" type="submit">
+                                                            <img src="{{ url_for('static', filename='assets/delete.png') }}" alt="Delete Icon">
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- Second Row: Text -->
+                                            <div class="columns">
+                                                <div class="column">
+                                                    <span>Scope <span class="text-secondary">
+                                                        ({{ target.scope }})
+                                                    </span></span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Third Row: More Texts -->
+                                            <div class="columns">
+                                                <div class="column is-3">
+                                                    <span>ASN <span class="text-secondary">
+                                                        ({{ target.asns.count() }})
+                                                    </span></span>
+                                                </div>
+                                                <div class="column is-3">
+                                                    <span>Domains <span class="text-secondary">
+                                                        ({{ target.domains.count() }})
+                                                    </span></span>
+                                                </div>
+                                                <div class="column is-3">
+                                                    <span>Ranges <span class="text-secondary">
+                                                        ({{ target.ranges.count() }})
+                                                    </span></span>
+                                                </div>
+                                                <div class="column is-3">
+                                                    <span>Archives <span class="text-secondary">
+                                                        ({{ target.archives.count() }})
+                                                    </span></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="column is-mobile">
+                                <span class="empty-targets-list">No Target Projects available</span>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <!-- New Target (Tab) -->
+                <div id="new-target" class="tab-content is-hidden">
+
+                    <div class="container p-5">
+                        <h3 class="title tab-title">
+                            Create a new Target Project
+                        </h3>
+                        
+                        <form class="target-form" action="/target/new" method="post">
+                            <div class="field">
+                                <label class="label" for="name">Target Name</label>
+                                <div class="control">
+                                    <input class="input custom-input" id="name" name="name" type="text" placeholder="Yahoo" required>
+                                </div>
+                            </div>
+                
+                            <div class="field">
+                                <label class="label" for="scope">Scope</label>
+                                <div class="control">
+                                    <input class="input custom-input" id="scope" name="scope" type="text" placeholder="Open">
+                                </div>
+                            </div>
+                
+                            <div class="field">
+                                <label class="label" for="program">Program</label>
+                                <div class="control">
+                                    <input class="input custom-input" id="program" name="program" type="text" placeholder="Hackerone">
+                                </div>
+                            </div>
+                
+                            <div class="field">
+                                <label class="label" for="asns">ASN(s)</label>
+                                <div class="control">
+                                    <textarea class="textarea custom-textarea" id="asns" name="asns" placeholder="AS7233"></textarea>
+                                </div>
+                            </div>
+                
+                            <div class="field">
+                                <label class="label" for="domains">Domain(s)</label>
+                                <div class="control">
+                                    <textarea class="textarea custom-textarea" id="domains" name="domains" placeholder="yahoo.com" required></textarea>
+                                </div>
+                            </div>
+                
+                            <div class="field">
+                                <label class="label" for="ranges">IP Range(s)</label>
+                                <div class="control">
+                                    <textarea class="textarea custom-textarea" id="ranges" name="ranges" placeholder="87.248.98.0/24"></textarea>
+                                </div>
+                            </div>
+                
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button class="button new-button" type="submit">New</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script
+            src="{{ url_for('static', filename='js/global.js') }}"
+        ></script>
+        <script
+            src="{{ url_for('static', filename='js/target.js') }}"
+        ></script>
+    </body>
+
+</html>

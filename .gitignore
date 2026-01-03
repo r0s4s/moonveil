@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Flask
+instance/
+.webassets-cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/moonveil.db
+data/*/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Static content (screenshots, reports)
+static/content/*/
+
+# Temporary files
+*.tmp
+/tmp/
+temp/
+
+# Config (if contains secrets)
+# config.ini  # Uncomment if your config.ini has secrets
+
+# V2 planning docs (keep these in v1 repo but they're for reference)
+V2_*.md
+
+# Node modules (if you add frontend build tools later)
+node_modules/

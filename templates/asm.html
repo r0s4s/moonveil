@@ -1,0 +1,1289 @@
+<!-- 
+*****************************************************************
+*  asm.html                                                     *
+*****************************************************************
+*                                                               *
+*                      This file is part of:                    *
+*                        MOONVEIL PROJECT                       *
+*                                                               *
+*****************************************************************
+-->
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Moonveil - {{ target_name }}</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400"
+        >
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/global.css') }}"
+        >
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/asm.css') }}"
+        >
+    </head>
+    <body>
+
+        <header class="site-header">
+            Moonveil
+            <span class="current-target">{{ target_name }}</span>
+        </header>
+        
+        <aside class="site-sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a class="active" href="/target">Target</a></li>
+                    <li><a class="active" href="/asm/{{ target_name }}">ASM</a></li>
+                    <li><a class="active" href="/search/{{ target_name }}">Search</a></li>
+                    <li><a class="inactive" href="/content">Content</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="site-content">
+
+            <div id="loading-spinner-container">
+                <div id="loading-spinner"></div>
+            </div>
+
+            <div class="tab-nav">
+                <button
+                    class="tab-button active"
+                    data-target="subdomains"
+                >
+                    Subdomains
+                </button>
+                <button
+                    class="tab-button"
+                    data-target="archives"
+                >
+                    Archives
+                </button>
+                <button
+                    class="tab-button"
+                    data-target="permutations"
+                >
+                    Permutations
+                </button>
+                <button
+                    class="tab-button"
+                    data-target="bruteforce"
+                >
+                    Bruteforce
+                </button>
+                <button
+                    class="tab-button"
+                    data-target="probing"
+                >
+                    HTTP Probing
+                </button>
+            </div>
+            
+            <div class="tab-content active" id="subdomains">
+                <h3 class="tab-heading">
+                    Subdomains Enumeration
+                </h3>
+
+                <form
+                    class="asm-form"
+                    action="/asm/enumeration"
+                    method="post"
+                >
+                    <input
+                        class="hidden"
+                        name="target_name"
+                        type="text"
+                        value="{{ target_name }}"
+                    >
+                    <div class="asm-fields">
+                        <label
+                            class="form-label"
+                            for="threads"
+                        >
+                            Threads
+                        </label>
+                        <input
+                            class="number-input"
+                            name="threads"
+                            type="number"
+                            min="0"
+                            max="100"
+                            value="20"
+                            required
+                        >
+
+                        <label
+                            class="form-label"
+                            for="monitoring"
+                        >
+                            Monitoring
+                        </label>
+                        <input
+                            class="monitoring-input"
+                            name="monitoring"
+                            type="checkbox"
+                        >
+                    </div>
+                    <button
+                        class="asm-button"
+                        type="submit"
+                    >
+                        Enumerate
+                    </button>
+                </form>
+
+                <div class="results-container">
+                    <div class="result-square">
+                        <span class="count">
+                            {{ previous_subdomains_count }}
+                        </span>
+                        <span class="count-label">
+                            Monitored Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ previous_subdomains_timestamp }}
+                        </span>
+                    </div>
+                    <div class="result-square">
+                        <span class="count">
+                            {{ subdomains_count }}
+                        </span>
+                        <span class="count-label">
+                            Latest Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if new_subdomains %}
+                    <h3 class="tab-heading">
+                        Latest Subdomains
+                    </h3>
+                    <ul class="asm-list" id="subdomains-list">
+                        {% for subdomain in new_subdomains[:10] %}
+                            <li class="asm-list-item">
+                                {% if subdomain|string|length > 96 %}
+                                    {{ subdomain[:96] }}...
+                                {% else %}
+                                    {{ subdomain }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <ul
+                        class="asm-list"
+                        id="hidden-subdomains"
+                        style="display: none;"
+                    >
+                        {% for subdomain in new_subdomains[10:] %}
+                            <li class="asm-list-item">
+                                {% if subdomain|string|length > 96 %}
+                                    {{ subdomain[:96] }}...
+                                {% else %}
+                                    {{ subdomain }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button
+                        class="load-more-button"
+                        id="load-more-subdomains-button"
+                    >
+                        Load More
+                    </button>
+                {% endif %}
+            </div>
+
+            <div class="tab-content" id="archives">
+                <h3 class="tab-heading">
+                    Archives Enumeration
+                </h3>
+
+                <form
+                    class="asm-form"
+                    action="/asm/archives"
+                    method="post"
+                >
+                    <input
+                        class="hidden"
+                        name="target_name"
+                        type="text"
+                        value="{{ target_name }}"
+                    >
+                    <div class="asm-fields">
+
+                        <label
+                            class="form-label"
+                            for="monitoring"
+                        >
+                            Monitoring
+                        </label>
+                        <input
+                            class="monitoring-input"
+                            name="monitoring"
+                            type="checkbox"
+                        >
+                    </div>
+                    <button
+                        class="asm-button"
+                        type="submit"
+                    >
+                        Gather
+                    </button>
+                </form>
+
+                <div class="results-container">
+                    <div class="result-square">
+                        <span class="count">
+                            {{ previous_archives_count }}
+                        </span>
+                        <span class="count-label">
+                            Monitored Archives
+                        </span>
+                        <span class="timestamp">
+                            {{ previous_archives_timestamp }}
+                        </span>
+                    </div>
+                    <div class="result-square">
+                        <span class="count">
+                            {{ archives_count }}
+                        </span>
+                        <span class="count-label">
+                            Latest Archives
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if new_archives %}
+                    <h3 class="tab-heading">
+                        Latest Archived Endpoints
+                    </h3>
+                    <ul class="asm-list" id="archives-list">
+                        {% for archive in new_archives[:10] %}
+                            <li class="asm-list-item">
+                                {% if archive|string|length > 96 %}
+                                    {{ archive[:96] }}...
+                                {% else %}
+                                    {{ archive }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <ul
+                        class="asm-list"
+                        id="hidden-archives"
+                        style="display: none;"
+                    >
+                        {% for archive in new_archives[10:] %}
+                            <li class="asm-list-item">
+                                {% if archive|string|length > 96 %}
+                                    {{ archive[:96] }}...
+                                {% else %}
+                                    {{ archive }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button
+                        class="load-more-button"
+                        id="load-more-archives-button"
+                    >
+                        Load More
+                    </button>
+                {% endif %}
+            </div>
+
+            <div class="tab-content" id="permutations">
+                <h3 class="tab-heading">
+                    Subdomains Permutations
+                </h3>
+
+                <form
+                    class="asm-form"
+                    action="/asm/permutations"
+                    method="post"
+                >
+                    <input
+                        class="hidden"
+                        name="target_name"
+                        type="text"
+                        value="{{ target_name }}"
+                    >
+                    <div class="asm-fields">
+                        <label
+                            class="form-label"
+                            for="limit"
+                        >
+                            Limit
+                        </label>
+                        <input
+                            class="number-input"
+                            name="limit"
+                            type="number"
+                            min="10"
+                            max="10000"
+                            value="500"
+                            required
+                        >
+                    </div>
+                    <button
+                        class="asm-button"
+                        type="submit"
+                    >
+                        Generate
+                    </button>
+                </form>
+
+                <div class="results-container">
+                    <div class="result-square">
+                        <span class="count">
+                            {{ subdomains_count }}
+                        </span>
+                        <span class="count-label">
+                            Latest Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                    <div class="result-square">
+                        <span class="count">
+                            {{ permutations_count }}
+                        </span>
+                        <span class="count-label">
+                            Generated Permutations
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if permutations %}
+                    <h3 class="tab-heading">
+                        Generated Permutations
+                    </h3>
+                    <ul class="asm-list" id="permutations-list">
+                        {% for permutation in permutations[:10] %}
+                            <li class="asm-list-item">
+                                {% if permutation|string|length > 96 %}
+                                    {{ permutation[:96] }}...
+                                {% else %}
+                                    {{ permutation }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <ul
+                        class="asm-list"
+                        id="hidden-permutations"
+                        style="display: none;"
+                    >
+                        {% for permutation in permutations[10:] %}
+                            <li class="asm-list-item">
+                                {% if permutation|string|length > 96 %}
+                                    {{ permutation[:96] }}...
+                                {% else %}
+                                    {{ permutation }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button
+                        class="load-more-button"
+                        id="load-more-permutations-button"
+                    >
+                        Load More
+                    </button>
+                {% endif %}
+            </div>
+
+            <div class="tab-content" id="bruteforce">
+                <h3 class="tab-heading">
+                    Subdomains Bruteforcing
+                </h3>
+
+                <form
+                    class="asm-form"
+                    action="/asm/bruteforce"
+                    method="post"
+                >
+                    <input
+                        class="hidden"
+                        name="target_name"
+                        type="text"
+                        value="{{ target_name }}"
+                    >
+                    <div class="asm-fields">
+                        <label
+                            class="form-label"
+                            for="threads"
+                        >
+                            Threads
+                        </label>
+                        <input
+                            class="number-input"
+                            name="threads"
+                            type="number"
+                            min="0"
+                            max="30000"
+                            value="15000"
+                            required
+                        >
+                    </div>
+                    <button
+                        class="asm-button"
+                        type="submit"
+                    >
+                        Bruteforce
+                    </button>
+                </form>
+
+                <div class="results-container">
+                    <div class="result-square">
+                        <span class="count">
+                            {{ subdomains_count }}
+                        </span>
+                        <span class="count-label">
+                            Latest Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                    <div class="result-square">
+                        <span class="count">
+                            {{ bruteforced_count }}
+                        </span>
+                        <span class="count-label">
+                            Bruteforced Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if bruteforced %}
+                    <h3 class="tab-heading">
+                        Bruteforced Subdomains
+                    </h3>
+                    <ul class="asm-list" id="bruteforced-list">
+                        {% for bruteforce in bruteforced[:10] %}
+                            <li class="asm-list-item">
+                                {% if bruteforce|string|length > 96 %}
+                                    {{ bruteforce[:96] }}...
+                                {% else %}
+                                    {{ bruteforce }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <ul
+                        class="asm-list"
+                        id="hidden-bruteforced"
+                        style="display: none;"
+                    >
+                        {% for bruteforce in bruteforced[10:] %}
+                            <li class="asm-list-item">
+                                {% if bruteforce|string|length > 96 %}
+                                    {{ bruteforce[:96] }}...
+                                {% else %}
+                                    {{ bruteforce }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button
+                        class="load-more-button"
+                        id="load-more-bruteforced-button"
+                    >
+                        Load More
+                    </button>
+                {% endif %}
+            </div>
+
+            <div class="tab-content" id="probing">
+                <h3 class="tab-heading">
+                    HTTP Probing
+                </h3>
+
+                <form
+                    class="asm-form"
+                    action="/asm/probing"
+                    method="post"
+                >
+                    <input
+                        class="hidden"
+                        name="target_name"
+                        type="text"
+                        value="{{ target_name }}"
+                    >
+                    <div class="asm-fields">
+                        <label
+                            class="form-label"
+                            for="threads"
+                        >
+                            Threads
+                        </label>
+                        <input
+                            class="number-input"
+                            name="threads"
+                            type="number"
+                            min="0"
+                            max="300"
+                            value="150"
+                            required
+                        >
+                    </div>
+                    <button
+                        class="asm-button"
+                        type="submit"
+                    >
+                        Probe
+                    </button>
+                </form>
+
+                <div class="results-container">
+                    <div class="result-square">
+                        <span class="count">
+                            {{ offline_subdomains }}
+                        </span>
+                        <span class="count-label">
+                            Offline Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                    <div class="result-square">
+                        <span class="count">
+                            {{ online_subdomains }}
+                        </span>
+                        <span class="count-label">
+                            Online Subdomains
+                        </span>
+                        <span class="timestamp">
+                            {{ timestamp }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script
+            src="{{ url_for('static', filename='js/global.js') }}"
+        ></script>
+        <script
+            src="{{ url_for('static', filename='js/asm.js') }}"
+        ></script>
+    </body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Head -->
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>Moonveil - {{ target_name }}</title>
+        <link href="{{ url_for('static', filename='css/global.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/asm.css') }}" rel="stylesheet">
+    </head>
+
+    <!-- Body -->
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <!-- Brand / Start -->
+            <div class="navbar-brand">
+                <strong class="navbar-item">
+                    <img
+                        class="navbar-logo"
+                        alt="Moonveil Logo"
+                        src="{{ url_for('static', filename='assets/logo.png') }}"
+                    />
+                    Moonveil
+                    <span class="current-target">{{ target_name }}</span>
+                </strong>
+
+                <a
+                    class="navbar-burger custom-navbar-burger"
+                    data-target="navbar-menu-data"
+                    aria-label="menu"
+                    aria-expanded="false"
+                    role="button"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <!-- End -->
+            <div class="navbar-end">
+                <div class="navbar-menu custom-navbar-menu" id="navbar-menu-data">
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/target"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/target.png') }}"
+                            alt="Target Icon"
+                        >
+                        <span class="navbar-link-text">Targets</span>
+                    </a>
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/asm/{{ target_name }}"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/asm.png') }}"
+                            alt="ASM Icon"
+                        >
+                        <span class="navbar-link-text">Attack Surface</span>
+                    </a>
+                    <a
+                        class="navbar-item custom-navbar-link"
+                        href="/search/{{ target_name }}"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/search.png') }}"
+                            alt="Search Icon"
+                        >
+                        <span class="navbar-link-text">Search</span>
+                    </a>
+                    <a
+                        class="navbar-item navbar-inactive-link"
+                        aria-disabled="true"
+                        href="#"
+                    >
+                        <img
+                            class="navbar-link-icon"
+                            src="{{ url_for('static', filename='assets/content.png') }}"
+                            alt="Content Icon"
+                        >
+                        <span class="navbar-link-text">Content Discovery</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Sidebar + Content -->
+        <div class="columns is-gapless">
+
+            <!-- Sidebar -->
+            <div class="column is-2 is-mobile is-narrow sidebar">
+                <aside class="menu">
+                    <ul class="menu-list">
+                        <li>
+                            <a
+                                class="tab-button active"
+                                data-target="subdomains"
+                            >
+                                Subdomains
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="tab-button"
+                                data-target="archives"
+                            >
+                                Archives
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="tab-button"
+                                data-target="permutations"
+                            >
+                                Permutations
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="tab-button"
+                                data-target="bruteforce"
+                            >
+                                Bruteforce
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="tab-button"
+                                data-target="probing"
+                            >
+                                Probing
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+
+            <!-- Content -->
+            <div class="column is-10 is-mobile content">
+
+                <!-- Loading Spinner ? -->
+                <div id="loading-spinner-container">
+                    <div id="loading-spinner"></div>
+                </div>
+
+                <!-- Subdomains (Tab) -->
+                <div id="subdomains" class="tab-content">
+                    
+                    <div class="container p-5">
+
+                        <!-- Subdomains Enumeration -->
+                        <h3 class="title tab-title">
+                            Subdomains Enumeration
+                        </h3>
+        
+                        <form
+                            class="asm-form"
+                            action="/asm/enumeration"
+                            method="post"
+                        >
+                            <input
+                                class="hidden"
+                                name="target_name"
+                                type="text"
+                                value="{{ target_name }}"
+                            >
+                            <div class="asm-fields">
+                                <label
+                                    class="form-label"
+                                    for="threads"
+                                >
+                                    Threads
+                                </label>
+                                <input
+                                    class="number-input"
+                                    name="threads"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value="20"
+                                    required
+                                >
+        
+                                <label
+                                    class="form-label"
+                                    for="monitoring"
+                                >
+                                    Monitoring
+                                </label>
+                                <input
+                                    class="monitoring-input"
+                                    name="monitoring"
+                                    type="checkbox"
+                                >
+                            </div>
+                            <button
+                                class="button asm-button"
+                                type="submit"
+                            >
+                                Enumerate
+                            </button>
+                        </form>
+        
+                        <div class="results-container">
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ previous_subdomains_count }}
+                                </span>
+                                <span class="count-label">
+                                    Monitored Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ previous_subdomains_timestamp }}
+                                </span>
+                            </div>
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ subdomains_count }}
+                                </span>
+                                <span class="count-label">
+                                    Latest Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                        </div>
+        
+                        {% if new_subdomains %}
+                            <h3 class="title tab-title">
+                                Latest Subdomains
+                            </h3>
+                            <ul class="asm-list" id="subdomains-list">
+                                {% for subdomain in new_subdomains[:10] %}
+                                    <li class="asm-list-item">
+                                        {% if subdomain|string|length > 96 %}
+                                            {{ subdomain[:96] }}...
+                                        {% else %}
+                                            {{ subdomain }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul
+                                class="asm-list"
+                                id="hidden-subdomains"
+                                style="display: none;"
+                            >
+                                {% for subdomain in new_subdomains[10:] %}
+                                    <li class="asm-list-item">
+                                        {% if subdomain|string|length > 96 %}
+                                            {{ subdomain[:96] }}...
+                                        {% else %}
+                                            {{ subdomain }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button
+                                class="load-more-button"
+                                id="load-more-subdomains-button"
+                            >
+                                Load More
+                            </button>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <!-- Archives (Tab) -->
+                <div id="archives" class="tab-content is-hidden">
+
+                    <div class="container p-5">
+                        <!-- Archives Enumeration -->
+                        <h3 class="title tab-title">
+                            Archives Enumeration
+                        </h3>
+        
+                        <form
+                            class="asm-form"
+                            action="/asm/archives"
+                            method="post"
+                        >
+                            <input
+                                class="hidden"
+                                name="target_name"
+                                type="text"
+                                value="{{ target_name }}"
+                            >
+                            <div class="asm-fields">
+        
+                                <label
+                                    class="form-label"
+                                    for="monitoring"
+                                >
+                                    Monitoring
+                                </label>
+                                <input
+                                    class="monitoring-input"
+                                    name="monitoring"
+                                    type="checkbox"
+                                >
+                            </div>
+                            <button
+                                class="asm-button"
+                                type="submit"
+                            >
+                                Gather
+                            </button>
+                        </form>
+        
+                        <div class="results-container">
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ previous_archives_count }}
+                                </span>
+                                <span class="count-label">
+                                    Monitored Archives
+                                </span>
+                                <span class="timestamp">
+                                    {{ previous_archives_timestamp }}
+                                </span>
+                            </div>
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ archives_count }}
+                                </span>
+                                <span class="count-label">
+                                    Latest Archives
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                        </div>
+        
+                        {% if new_archives %}
+                            <h3 class="tab-heading">
+                                Latest Archived Endpoints
+                            </h3>
+                            <ul class="asm-list" id="archives-list">
+                                {% for archive in new_archives[:10] %}
+                                    <li class="asm-list-item">
+                                        {% if archive|string|length > 96 %}
+                                            {{ archive[:96] }}...
+                                        {% else %}
+                                            {{ archive }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul
+                                class="asm-list"
+                                id="hidden-archives"
+                                style="display: none;"
+                            >
+                                {% for archive in new_archives[10:] %}
+                                    <li class="asm-list-item">
+                                        {% if archive|string|length > 96 %}
+                                            {{ archive[:96] }}...
+                                        {% else %}
+                                            {{ archive }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button
+                                class="load-more-button"
+                                id="load-more-archives-button"
+                            >
+                                Load More
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <!-- Permutations (Tab) -->
+                <div id="permutations" class="tab-content is-hidden">
+
+                    <div class="container p-5">
+                        <!-- Subdomains Permutations -->
+                        <h3 class="title tab-title">
+                            Subdomains Permutations
+                        </h3>
+        
+                        <form
+                            class="asm-form"
+                            action="/asm/permutations"
+                            method="post"
+                        >
+                            <input
+                                class="hidden"
+                                name="target_name"
+                                type="text"
+                                value="{{ target_name }}"
+                            >
+                            <div class="asm-fields">
+                                <label
+                                    class="form-label"
+                                    for="limit"
+                                >
+                                    Limit
+                                </label>
+                                <input
+                                    class="number-input"
+                                    name="limit"
+                                    type="number"
+                                    min="10"
+                                    max="10000"
+                                    value="500"
+                                    required
+                                >
+                            </div>
+                            <button
+                                class="asm-button"
+                                type="submit"
+                            >
+                                Generate
+                            </button>
+                        </form>
+        
+                        <div class="results-container">
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ subdomains_count }}
+                                </span>
+                                <span class="count-label">
+                                    Latest Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ permutations_count }}
+                                </span>
+                                <span class="count-label">
+                                    Generated Permutations
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                        </div>
+        
+                        {% if permutations %}
+                            <h3 class="tab-heading">
+                                Generated Permutations
+                            </h3>
+                            <ul class="asm-list" id="permutations-list">
+                                {% for permutation in permutations[:10] %}
+                                    <li class="asm-list-item">
+                                        {% if permutation|string|length > 96 %}
+                                            {{ permutation[:96] }}...
+                                        {% else %}
+                                            {{ permutation }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul
+                                class="asm-list"
+                                id="hidden-permutations"
+                                style="display: none;"
+                            >
+                                {% for permutation in permutations[10:] %}
+                                    <li class="asm-list-item">
+                                        {% if permutation|string|length > 96 %}
+                                            {{ permutation[:96] }}...
+                                        {% else %}
+                                            {{ permutation }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button
+                                class="load-more-button"
+                                id="load-more-permutations-button"
+                            >
+                                Load More
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <!-- Bruteforce (Tab) -->
+                <div id="bruteforce" class="tab-content is-hidden">
+
+                    <div class="container p-5">
+                        <!-- Subdomains Bruteforcing -->
+                        <h3 class="title tab-title">
+                            Subdomains Bruteforcing
+                        </h3>
+        
+                        <form
+                            class="asm-form"
+                            action="/asm/bruteforce"
+                            method="post"
+                        >
+                            <input
+                                class="hidden"
+                                name="target_name"
+                                type="text"
+                                value="{{ target_name }}"
+                            >
+                            <div class="asm-fields">
+                                <label
+                                    class="form-label"
+                                    for="threads"
+                                >
+                                    Threads
+                                </label>
+                                <input
+                                    class="number-input"
+                                    name="threads"
+                                    type="number"
+                                    min="0"
+                                    max="30000"
+                                    value="15000"
+                                    required
+                                >
+                            </div>
+                            <button
+                                class="asm-button"
+                                type="submit"
+                            >
+                                Bruteforce
+                            </button>
+                        </form>
+        
+                        <div class="results-container">
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ subdomains_count }}
+                                </span>
+                                <span class="count-label">
+                                    Latest Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ bruteforced_count }}
+                                </span>
+                                <span class="count-label">
+                                    Bruteforced Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                        </div>
+        
+                        {% if bruteforced %}
+                            <h3 class="tab-heading">
+                                Bruteforced Subdomains
+                            </h3>
+                            <ul class="asm-list" id="bruteforced-list">
+                                {% for bruteforce in bruteforced[:10] %}
+                                    <li class="asm-list-item">
+                                        {% if bruteforce|string|length > 96 %}
+                                            {{ bruteforce[:96] }}...
+                                        {% else %}
+                                            {{ bruteforce }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul
+                                class="asm-list"
+                                id="hidden-bruteforced"
+                                style="display: none;"
+                            >
+                                {% for bruteforce in bruteforced[10:] %}
+                                    <li class="asm-list-item">
+                                        {% if bruteforce|string|length > 96 %}
+                                            {{ bruteforce[:96] }}...
+                                        {% else %}
+                                            {{ bruteforce }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button
+                                class="load-more-button"
+                                id="load-more-bruteforced-button"
+                            >
+                                Load More
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <!-- Probing (Tab) -->
+                <div id="probing" class="tab-content is-hidden">
+
+                    <div class="container p-5">
+                        <!-- HTTP Probing -->
+                        <h3 class="title tab-title">
+                            HTTP Probing
+                        </h3>
+        
+                        <form
+                            class="asm-form"
+                            action="/asm/probing"
+                            method="post"
+                        >
+                            <input
+                                class="hidden"
+                                name="target_name"
+                                type="text"
+                                value="{{ target_name }}"
+                            >
+                            <div class="asm-fields">
+                                <label
+                                    class="form-label"
+                                    for="threads"
+                                >
+                                    Threads
+                                </label>
+                                <input
+                                    class="number-input"
+                                    name="threads"
+                                    type="number"
+                                    min="0"
+                                    max="300"
+                                    value="150"
+                                    required
+                                >
+                            </div>
+                            <button
+                                class="asm-button"
+                                type="submit"
+                            >
+                                Probe
+                            </button>
+                        </form>
+        
+                        <div class="results-container">
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ offline_subdomains }}
+                                </span>
+                                <span class="count-label">
+                                    Offline Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                            <div class="result-square">
+                                <span class="count">
+                                    {{ online_subdomains }}
+                                </span>
+                                <span class="count-label">
+                                    Online Subdomains
+                                </span>
+                                <span class="timestamp">
+                                    {{ timestamp }}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        </div>
+
+        <script
+            src="{{ url_for('static', filename='js/global.js') }}"
+        ></script>
+        <script
+            src="{{ url_for('static', filename='js/asm.js') }}"
+        ></script>
+    </body>
+
+</html>
