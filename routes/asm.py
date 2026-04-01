@@ -346,10 +346,6 @@ async def permutations():
         }), 500
     
     permutations = cmd.get_output().split('\n')
-    # Something wrong, some permutations are not added properly
-    # Might need to pass the domain name as a parameter of this operation
-    print('Permutations: ', permutations)
-    print('Total: ', len(permutations))
 
     # (Permutations) Bulk Insertion
     for domain in domains:
@@ -433,8 +429,6 @@ async def bruteforce():
             }), 500
         
         subdomains = cmd.get_output().split('\n')
-        print('Bruteforced: ', subdomains)
-        print('Total: ', len(subdomains))
 
         # (Bruteforce) Bulk Insertion
         # for domain in domains:

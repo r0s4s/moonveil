@@ -9,6 +9,9 @@
 
 import os, subprocess
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from configparser import ConfigParser
 
 from flask import ( # type: ignore
@@ -54,7 +57,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
     # Session
-    secret_key = config.get('Security', 'SecretKey')
+    secret_key = os.environ.get('SECRET_KEY') or config.get('Security', 'SecretKey')
     app.secret_key = secret_key
 
     # Extensions

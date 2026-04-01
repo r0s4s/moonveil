@@ -161,14 +161,9 @@ All entities cascade delete with their parent Target.
 - Large scans may take time. Consider adjusting timeout values in `config.ini`
 - For better performance, increase thread counts in scan operations
 
-## Roadmap
+## Status
 
-This is the stable v1 release. Future development is focused on v2, which will include:
-- Graph database (Neo4j) for relationship mapping
-- LLM-powered vulnerability correlation
-- RAG-based writeup analysis
-- Continuous monitoring with smart alerts
-- Natural language query interface
+Stable v1 release. Actively maintained.
 
 ## Contributing
 

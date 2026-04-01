@@ -52,7 +52,7 @@ COPY --from=go-builder /usr/local/lib /usr/local/lib
 COPY --from=go-builder /usr/local/bin/massdns /usr/local/bin/massdns
 
 # Set an environment variable to point to the Chrome executable on your local machine
-ENV CHROME_PATH C:\Program Files\Google\Chrome\Application\chrome.exe
+ENV CHROME_PATH=/usr/bin/chromium
 
 # Command to run your application
 CMD ["python", "run.py"]
